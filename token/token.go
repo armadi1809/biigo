@@ -4,15 +4,16 @@ type TokenType string
 
 type Token struct {
 	Type    TokenType
-	Literal string
+	Literal any
 	Lexeme  string
 	Line    int
 }
 
 const (
-	EOF    = "EOF"
-	STRING = "STRING"
-	NUMBER = "NUMBER"
+	EOF        = "EOF"
+	STRING     = "STRING"
+	NUMBER     = "NUMBER"
+	IDENTIFIER = "IDENTIFIER"
 
 	EQUAL = "="
 	PLUS  = "+"
@@ -58,7 +59,7 @@ const (
 	LET      = "LET"
 )
 
-func NewToken(t TokenType, lexeme string, literal string, line int) *Token {
+func NewToken(t TokenType, lexeme string, literal any, line int) *Token {
 	return &Token{
 		Type:    t,
 		Lexeme:  lexeme,

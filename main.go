@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/armadi1809/biigo/lexer"
 )
 
 func main() {
@@ -38,10 +40,21 @@ func runPrompt() {
 		if len(line) == 0 {
 			break
 		}
-		_ = run(line)
+		err := run(line)
+		if err != nil {
+			log.Print(err.Error())
+		}
 	}
 }
 
 func run(source string) error {
+	lex := lexer.NewLexer(source)
+	toks, err := lex.ScanTokens()
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(toks)
 	return nil
 }
