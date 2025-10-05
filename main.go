@@ -45,11 +45,3 @@ func runPrompt() {
 func run(source string) error {
 	return nil
 }
-
-func failure(line int, message string) {
-	report(line, "", message)
-}
-
-func report(line int, where string, message string) {
-	log.Printf("[Line %d] Error%s: %s\n", line, where, message)
-}
