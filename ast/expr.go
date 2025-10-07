@@ -1,49 +1,62 @@
 package ast
 
-import "github.com/armadi1809/biigo/token"
+import (
+	"fmt"
+	"strings"
 
-type Visitor[R any] interface {
-	VisitBinaryExpr(Binary[R]) R
-	VisitGroupingExpr(Grouping[R]) R
-	VisitUnaryExpr(Unary[R]) R
-	VisitLiteralExpr(Literal[R]) R
+	"github.com/armadi1809/biigo/token"
+)
+
+type Expression interface {
+	String() string
 }
 
-type Expression[R any] interface {
-	Accept(Visitor[R]) R
-}
-
-type Binary[R any] struct {
-	Left     Expression[R]
-	Right    Expression[R]
+type Binary struct {
+	Left     Expression
+	Right    Expression
 	Operator token.Token
 }
 
-type Unary[R any] struct {
-	Exp      Expression[R]
+type Unary struct {
+	Exp      Expression
 	Operator token.Token
 }
 
-type Grouping[R any] struct {
-	Exp Expression[R]
+type Grouping struct {
+	Exp Expression
 }
 
-type Literal[R any] struct {
+type Literal struct {
 	Val any
 }
 
-func (e Binary[R]) Accept(v Visitor[R]) R {
-	return v.VisitBinaryExpr(e)
+func (e Binary) String() string {
+	return parenthesize(e.Operator.Lexeme, e.Left, e.Right)
 }
 
-func (e Unary[R]) Accept(v Visitor[R]) R {
-	return v.VisitUnaryExpr(e)
+func (e Unary) String() string {
+	return parenthesize(e.Operator.Lexeme, e.Exp)
 }
 
-func (e Grouping[R]) Accept(v Visitor[R]) R {
-	return v.VisitGroupingExpr(e)
+func (e Grouping) String() string {
+	return parenthesize("group", e.Exp)
 }
 
-func (e Literal[R]) Accept(v Visitor[R]) R {
-	return v.VisitLiteralExpr(e)
+func (e Literal) String() string {
+	if e.Val == nil {
+		return "null"
+	}
+	return fmt.Sprintf("%v", e.Val)
+}
+
+func parenthesize(name string, exps ...Expression) string {
+	var sb strings.Builder
+	sb.WriteRune('(')
+	sb.WriteString(name)
+	for _, exp := range exps {
+		sb.WriteRune(' ')
+		sb.WriteString(exp.String())
+	}
+	sb.WriteRune(')')
+	return sb.String()
 }
