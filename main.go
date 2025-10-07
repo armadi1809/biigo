@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"os"
@@ -33,12 +34,15 @@ func runFile(filepath string) {
 }
 
 func runPrompt() {
-	var line string
+	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("> ")
-		fmt.Scan(&line)
-		if len(line) == 0 {
+		if !scanner.Scan() {
 			break
+		}
+		line := scanner.Text()
+		if len(line) == 0 {
+			continue
 		}
 		err := run(line)
 		if err != nil {
