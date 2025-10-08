@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/armadi1809/biigo/lexer"
+	"github.com/armadi1809/biigo/parser"
 )
 
 func main() {
@@ -59,6 +60,9 @@ func run(source string) error {
 		return err
 	}
 
-	fmt.Println(toks)
+	parser := parser.NewParser(toks)
+	exp, err := parser.Parse()
+
+	fmt.Printf("%v\n", exp)
 	return nil
 }

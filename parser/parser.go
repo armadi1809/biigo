@@ -20,6 +20,10 @@ func NewParser(tokens []token.Token) *Parser {
 	}
 }
 
+func (p *Parser) Parse() (ast.Expression, error) {
+	return p.expression()
+}
+
 func (p *Parser) expression() (ast.Expression, error) {
 	return p.equality()
 }
@@ -147,6 +151,7 @@ func (p *Parser) primary() (ast.Expression, error) {
 	err := &langerror.LangError{
 		Message: "parse error: expected an expression",
 		Where:   "Parser",
+		Line:    p.peek().Line,
 	}
 	return nil, err
 }
@@ -159,6 +164,7 @@ func (p *Parser) consume(tok token.TokenType, errMessage string) error {
 	err := &langerror.LangError{
 		Message: fmt.Sprintf("parse error: %s", errMessage),
 		Where:   "Parser",
+		Line:    p.peek().Line,
 	}
 	return err
 }
