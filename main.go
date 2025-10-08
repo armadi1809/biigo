@@ -53,6 +53,7 @@ func runPrompt() {
 }
 
 func run(source string) error {
+	// lexing
 	lex := lexer.NewLexer(source)
 	toks, err := lex.ScanTokens()
 
@@ -60,8 +61,13 @@ func run(source string) error {
 		return err
 	}
 
+	// parsing
 	parser := parser.NewParser(toks)
 	exp, err := parser.Parse()
+
+	if err != nil {
+		return err
+	}
 
 	fmt.Printf("%v\n", exp)
 	return nil
