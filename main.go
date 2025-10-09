@@ -69,6 +69,6 @@ func run(source string) error {
 		return err
 	}
 
-	fmt.Printf("%v\n", exp)
+	fmt.Printf("%s\n", exp.String())
 	return nil
 }

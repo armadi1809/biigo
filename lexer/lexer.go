@@ -1,6 +1,7 @@
 package lexer
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 
@@ -86,6 +87,12 @@ func (lexer *Lexer) scanToken() error {
 		lexer.addToken(token.SEMICOLON, "")
 	case '*':
 		lexer.addToken(token.STAR, "")
+	case '=':
+		if lexer.match('=') {
+			lexer.addToken(token.EQUAL_EQUAL, "")
+		} else {
+			lexer.addToken(token.EQUAL, "")
+		}
 	case '!':
 		if lexer.match('=') {
 			lexer.addToken(token.BANG_EQUAL, "")
@@ -142,7 +149,7 @@ func (lexer *Lexer) scanToken() error {
 		} else {
 			err = &langerror.LangError{
 				Line:    lexer.line,
-				Message: "Unexpected character",
+				Message: fmt.Sprintf("unexpexted character %c", c),
 			}
 		}
 	}
