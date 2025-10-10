@@ -29,13 +29,33 @@ func (p *Parser) expression() (ast.Expression, error) {
 }
 
 func (p *Parser) equality() (ast.Expression, error) {
-	e, err := p.comparison()
+	e, err := p.commaOper()
 	if err != nil {
 		return nil, err
 	}
 	for p.match(token.BANG_EQUAL, token.EQUAL_EQUAL) {
 		operator := p.previous()
 		right, err := p.comparison()
+		if err != nil {
+			return nil, err
+		}
+		e = ast.Binary{
+			Left:     e,
+			Operator: operator,
+			Right:    right,
+		}
+	}
+	return e, nil
+}
+
+func (p *Parser) commaOper() (ast.Expression, error) {
+	e, err := p.comparison()
+	if err != nil {
+		return nil, err
+	}
+	for p.match(token.COMMA) {
+		operator := p.previous()
+		right, err := p.term()
 		if err != nil {
 			return nil, err
 		}
