@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/armadi1809/biigo/interpreter"
 	"github.com/armadi1809/biigo/lexer"
 	"github.com/armadi1809/biigo/parser"
 )
@@ -69,6 +70,9 @@ func run(source string) error {
 		return err
 	}
 
-	fmt.Printf("%s\n", exp.String())
-	return nil
+	val, err := interpreter.Interpret(exp)
+	if err == nil {
+		fmt.Printf("%v\n", val)
+	}
+	return err
 }
